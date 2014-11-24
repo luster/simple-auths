@@ -1,0 +1,10 @@
+PERMIT:luster:a.txt
+PERMIT:luster:b.txt
+DENY:luster:c.txt
+DENY:thorsen:a.txt
+PERMIT:thorsen:b.txt
+PERMIT:thorsen:c.txt
+PERMIT::d.txt
+DENY::e.txt
+PERMIT:root:
+DENY:guest:
