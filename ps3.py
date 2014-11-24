@@ -51,7 +51,8 @@ def load_auth(filename, users):
     DENY:username: -- user can access NO FILES
     DENY::filename: -- NO user can access file
 
-    In the case of a conflict, DENY takes precedence over PERMIT
+    In the case of a conflict, permit takes precedence over deny.
+    For example, ROOT can access file even if file is DENY all.
     """
     files = dict()
 
