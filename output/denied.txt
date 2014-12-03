@@ -1,0 +1,11 @@
+$ python ps3.py
+Username: luster
+Password:
+Login incorrect
+Username: luster
+Password:
+Login incorrect
+Username: luster
+Password:
+Login incorrect
+Permission denied.

@@ -13,23 +13,12 @@
 #
 from getpass import getpass
 
-class File(object):
-    def __init__(self, filename):
-        self.name = filename
-        self.allow_all = False
-        self.deny_all = False
-        self.allow = dict()
-        self.deny = dict()
-
-    def __str__(self):
-        return self.name
 
 class User(object):
     def __init__(self, username, password):
         self.name = username
         self.password = password
-        self.allow_all = False
-        self.deny_all = False
+
 
 def load_users(filename):
     users = dict()
@@ -42,6 +31,7 @@ def load_users(filename):
                 users[tmp[0]] = User(username=tmp[0], password=tmp[1])
 
     return users
+
 
 def is_authorized(filename, user):
     """
@@ -103,10 +93,12 @@ def is_authorized(filename, user):
                 return False
             else:
                 return False
+    return False
 
 
 if __name__ == '__main__':
     import sys
+    import os
 
     users = load_users('users.txt')
 
@@ -137,6 +129,9 @@ if __name__ == '__main__':
     try:
         while True:
             filename = raw_input('Filename: ')
+            if not os.path.isfile(filename):
+                print 'File \'%s\' does not exist' % (filename)
+                continue
 
             if is_authorized(filename, user):
                 try:

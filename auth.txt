@@ -1,3 +1,5 @@
+DENY::auth.txt
+DENY::users.txt
 PERMIT:luster:a.txt
 PERMIT:luster:b.txt
 DENY:luster:c.txt
@@ -8,3 +10,15 @@ PERMIT::d.txt
 DENY::e.txt
 PERMIT:root:
 DENY:guest:
+PERMIT::
+DENY::
+DENY:luster:a.txt
+DENY:luster:b.txt
+PERMIT:luster:c.txt
+PERMIT:thorsen:a.txt
+DENY:thorsen:b.txt
+DENY:thorsen:c.txt
+DENY::d.txt
+PERMIT::e.txt
+DENY:root:
+PERMIT:guest:

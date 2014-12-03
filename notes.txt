@@ -1,0 +1,18 @@
+"user1 may access file1 or file2. user2 may access file2 only. user3 may
+access any file."
+
+auth.txt
+--------
+PERMIT:user1:file1  # user 1 can access file 1
+PERMIT:user1:file2  # user 1 can access file 2
+PERMIT:user2:file2  # user 2 can access file 2
+DENY:user2:         # deny all other files to user2 "file2 only"
+PERMIT:user3:       # permit user3 to access all files
+
+"Authenticated users may have access to ANY files in the directory, except
+the user eve is forbidden to access the file named adam."
+
+auth.txt
+--------
+DENY:eve:adam
+PERMIT::

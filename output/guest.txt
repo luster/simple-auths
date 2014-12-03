@@ -1,0 +1,25 @@
+$ python ps3.py
+Username: guest
+Password:
+Filename: a.txt
+Access to file a.txt denied
+Filename: b.txt
+Access to file b.txt denied
+Filename: c.txt
+Access to file c.txt denied
+Filename: d.txt
+file d
+get a load'a'dis
+hoop de blah
+
+
+Filename: e.txt
+Access to file e.txt denied
+Filename: f.txt
+File 'f.txt' does not exist
+Filename: auth.txt
+Access to file auth.txt denied
+Filename: users.txt
+Access to file users.txt denied
+Filename: ^D
+Thanks for playing.
