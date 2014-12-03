@@ -10,6 +10,7 @@
 #   Professor Jeff Hakner
 #
 #   ps3
+#
 from getpass import getpass
 
 class File(object):
@@ -42,7 +43,7 @@ def load_users(filename):
 
     return users
 
-def load_auth(filename, users):
+def is_authorized(filename, user):
     """
     PERMIT:username:filename
     DENY:username:filename
@@ -50,59 +51,64 @@ def load_auth(filename, users):
     PERMIT::filename -- ALL users can access file - UNIVERSAL
     DENY:username: -- user can access NO FILES
     DENY::filename: -- NO user can access file
+    PERMIT:: -- ALL users can access ALL files
+    DENY:: -- NO user can access ANY file
 
-    In the case of a conflict, DENY takes precedence over PERMIT
+    first rule applies
     """
-    files = dict()
-
-    with open(filename, 'r') as f:
+    auth_file = 'auth.txt'
+    with open(auth_file, 'r') as f:
         for line in f:
-            tmp = line.strip().split(':') # [permission, username, filename]
+            tmp = line.strip().split(':')
             if len(tmp) != 3:
                 continue
+            permission, username, fileline = tmp[0], tmp[1], tmp[2]
 
-            if tmp[0] == 'PERMIT':
-                perm = 1
-            elif tmp[0] == 'DENY':
-                perm = 0
+            # Rule does not apply
+            if username and username != user:
+                continue
+            if fileline and fileline != filename:
+                continue
+
+            if permission == 'PERMIT':
+                P = 1
+            elif permission == 'DENY':
+                P = 0
             else:
                 continue
-            username = tmp[1]
-            if username and username not in users:
-                continue
 
-            filename = tmp[2]
-            if filename and filename not in files:
-                files[filename] = File(filename)
+            if username == user:
+                U = 1
+            else:
+                U = 0
 
-            if not username and not filename:
-                continue
+            if fileline == filename:
+                F = 1
+            else:
+                F = 0
 
-            if not username:
-                if perm:
-                    files[filename].allow_all = True
-                else:
-                    files[filename].deny_all = True
+            # Logic
+            A = P and U and F
+            B = P and U and not F
+            C = P and not U and F
+            D = P and not U and not F
+            W = not P and U and F
+            X = not P and U and not F
+            Y = not P and not U and F
+            Z = not P and not U and not F
 
-            if not filename:
-                if perm:
-                    users[username].allow_all = True
-                else:
-                    users[username].deny_all = False
+            if A or B or C or D:
+                return True
+            elif W or X or Y or Z:
+                return False
+            else:
+                return False
 
-            if username and filename:
-                if perm:
-                    files[filename].allow[username] = True
-                else:
-                    files[filename].deny[username] = True
-
-    return files
 
 if __name__ == '__main__':
     import sys
 
     users = load_users('users.txt')
-    files = load_auth('auth.txt', users)
 
     tries = 0
     auth = False
@@ -117,7 +123,7 @@ if __name__ == '__main__':
             continue
 
         if users[username].password == password:
-            user = users[username]
+            user = users[username].name
             auth = True
         else:
             print 'Login incorrect'
@@ -132,25 +138,15 @@ if __name__ == '__main__':
         while True:
             filename = raw_input('Filename: ')
 
-            curfile = files.get(filename, None)
-            if not curfile:
-                print 'File %s does not exist' % (filename)
-                continue
-
-            if user.allow_all or \
-                    user.name in curfile.allow or \
-                    curfile.allow_all:
+            if is_authorized(filename, user):
                 try:
                     with open(filename, 'r') as f:
                         print f.read(),
                     continue
                 except IOError:
+                    print 'File %s does not exist' % (filename)
                     continue
-
-            if user.deny_all or \
-                    user.name not in curfile.allow or \
-                    user.name in curfile.deny or \
-                    curfile.deny_all:
+            else:
                 print 'Access to file %s denied' % (filename)
                 continue
     except EOFError:
