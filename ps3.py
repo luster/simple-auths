@@ -61,38 +61,12 @@ def is_authorized(filename, user):
                 continue
 
             if permission == 'PERMIT':
-                P = 1
+                return True
             elif permission == 'DENY':
-                P = 0
+                return False
             else:
                 continue
 
-            if username == user:
-                U = 1
-            else:
-                U = 0
-
-            if fileline == filename:
-                F = 1
-            else:
-                F = 0
-
-            # Logic
-            A = P and U and F
-            B = P and U and not F
-            C = P and not U and F
-            D = P and not U and not F
-            W = not P and U and F
-            X = not P and U and not F
-            Y = not P and not U and F
-            Z = not P and not U and not F
-
-            if A or B or C or D:
-                return True
-            elif W or X or Y or Z:
-                return False
-            else:
-                return False
     return False
 
 
